@@ -35,9 +35,19 @@ export const Route = createFileRoute("/")({
         property: "og:description",
         content: "Advanced spinal decompression and chiropractic care in West Palm Beach, FL.",
       },
+      { property: "og:image", content: clinicHero },
       { property: "og:url", content: "/" },
+      { name: "twitter:title", content: "Treasure Coast Spine & Disc Center" },
+      {
+        name: "twitter:description",
+        content: "Advanced spinal decompression and chiropractic care in West Palm Beach, FL.",
+      },
+      { name: "twitter:image", content: clinicHero },
     ],
-    links: [{ rel: "canonical", href: "/" }],
+    links: [
+      { rel: "canonical", href: "/" },
+      { rel: "preload", as: "image", href: clinicHero, fetchPriority: "high" },
+    ],
     scripts: [
       {
         type: "application/ld+json",
@@ -186,6 +196,9 @@ function Index() {
               alt="Modern chiropractic treatment room at Treasure Coast Spine & Disc Center"
               width={1024}
               height={1280}
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
               className="w-full aspect-[4/5] object-cover rounded-2xl ring-1 ring-black/5 shadow-2xl"
             />
           </div>

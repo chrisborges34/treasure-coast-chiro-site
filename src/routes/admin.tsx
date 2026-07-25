@@ -11,7 +11,10 @@ import type { Tables, Enums } from "@/integrations/supabase/types";
 export const Route = createFileRoute("/admin")({
   component: AdminPage,
   head: () => ({
-    meta: [{ title: "Admin Dashboard — Treasure Coast Spine & Disc Center" }],
+    meta: [
+      { title: "Admin Dashboard — Treasure Coast Spine & Disc Center" },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
   }),
 });
 

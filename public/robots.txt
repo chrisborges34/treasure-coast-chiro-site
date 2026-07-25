@@ -1,2 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /portal
+
+Sitemap: https://treasure-coast-chiro-site.lovable.app/sitemap.xml

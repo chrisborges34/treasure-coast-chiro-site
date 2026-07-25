@@ -11,7 +11,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
-
 export const Route = createFileRoute("/book")({
   component: BookPage,
   head: () => ({
@@ -75,7 +74,6 @@ function BookPage() {
       active = false;
     };
   }, [date, fetchBookedTimes]);
-
 
   const availableSlots = useMemo(() => {
     if (!date) return [];

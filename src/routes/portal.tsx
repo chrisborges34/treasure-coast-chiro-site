@@ -9,7 +9,10 @@ import type { Tables } from "@/integrations/supabase/types";
 export const Route = createFileRoute("/portal")({
   component: PortalPage,
   head: () => ({
-    meta: [{ title: "My Appointments — Treasure Coast Spine & Disc Center" }],
+    meta: [
+      { title: "My Appointments — Treasure Coast Spine & Disc Center" },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
   }),
 });
 
