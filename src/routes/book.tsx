@@ -50,29 +50,32 @@ function BookPage() {
     if (meta?.phone) setPhone(meta.phone);
   }, [user]);
 
+  const fetchBookedTimes = useServerFn(getBookedTimes);
+
   useEffect(() => {
     if (!date) return;
     let active = true;
     setLoadingSlots(true);
     setSelectedTime(null);
 
-    supabase
-      .rpc("get_booked_times", { _date: toDateKey(date) })
-      .then(({ data, error: rpcError }) => {
+    fetchBookedTimes({ data: { date: toDateKey(date) } })
+      .then((times) => {
         if (!active) return;
-        if (rpcError) {
-          console.error(rpcError);
-          setBookedTimes([]);
-        } else {
-          setBookedTimes((data ?? []) as unknown as string[]);
-        }
+        setBookedTimes(times);
+        setLoadingSlots(false);
+      })
+      .catch((err) => {
+        if (!active) return;
+        console.error(err);
+        setBookedTimes([]);
         setLoadingSlots(false);
       });
 
     return () => {
       active = false;
     };
-  }, [date]);
+  }, [date, fetchBookedTimes]);
+
 
   const availableSlots = useMemo(() => {
     if (!date) return [];
