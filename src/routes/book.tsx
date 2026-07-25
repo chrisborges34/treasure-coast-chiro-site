@@ -1,13 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
+import { getBookedTimes } from "@/lib/booked-times.functions";
 import { getSlotsForDate, isClinicOpenOn, toDateKey, formatTimeLabel } from "@/lib/clinic-hours";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+
 
 export const Route = createFileRoute("/book")({
   component: BookPage,
@@ -47,29 +50,32 @@ function BookPage() {
     if (meta?.phone) setPhone(meta.phone);
   }, [user]);
 
+  const fetchBookedTimes = useServerFn(getBookedTimes);
+
   useEffect(() => {
     if (!date) return;
     let active = true;
     setLoadingSlots(true);
     setSelectedTime(null);
 
-    supabase
-      .rpc("get_booked_times", { _date: toDateKey(date) })
-      .then(({ data, error: rpcError }) => {
+    fetchBookedTimes({ data: { date: toDateKey(date) } })
+      .then((times) => {
         if (!active) return;
-        if (rpcError) {
-          console.error(rpcError);
-          setBookedTimes([]);
-        } else {
-          setBookedTimes((data ?? []) as unknown as string[]);
-        }
+        setBookedTimes(times);
+        setLoadingSlots(false);
+      })
+      .catch((err) => {
+        if (!active) return;
+        console.error(err);
+        setBookedTimes([]);
         setLoadingSlots(false);
       });
 
     return () => {
       active = false;
     };
-  }, [date]);
+  }, [date, fetchBookedTimes]);
+
 
   const availableSlots = useMemo(() => {
     if (!date) return [];
